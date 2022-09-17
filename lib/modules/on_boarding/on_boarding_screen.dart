@@ -4,27 +4,90 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:shop_app/modules/login/login_screen.dart';
+import 'package:shop_app/shared/component/component.dart';
+import 'package:shop_app/shared/styles/colors.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class BoardingModel {
-  // i stopped here today and i will create this class later to add content to
-  // every screen of the boarding screen
+  final String image;
+  final String title;
+  final String body;
+
+  BoardingModel({
+    required this.image,
+    required this.title,
+    required this.body,
+  });
 }
 
-class OnBoardingScreen extends StatelessWidget {
-  const OnBoardingScreen({Key? key}) : super(key: key);
+class OnBoardingScreen extends StatefulWidget {
+  OnBoardingScreen({Key? key}) : super(key: key);
+
+  @override
+  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
+}
+
+class _OnBoardingScreenState extends State<OnBoardingScreen> {
+  var boardController = PageController();
+
+  List<BoardingModel> boarding = [
+    BoardingModel(
+        image: 'assets/images/onboard_1.png',
+        title: 'On Board 1 Title',
+        body: 'On Board 1 Body'),
+    BoardingModel(
+        image: 'assets/images/onboard_1.png',
+        title: 'On Board 2 Title',
+        body: 'On Board 2 Body'),
+    BoardingModel(
+        image: 'assets/images/onboard_1.png',
+        title: 'On Board 3 Title',
+        body: 'On Board 3 Body'),
+  ];
+
+  bool isLast = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          TextButton(
+            onPressed: () {
+              navidateAndFInish(
+                context,
+                LOginScreen(),
+              );
+            },
+            child: Text(
+              'Skip',
+            ),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Column(
           children: [
             Expanded(
               child: PageView.builder(
-                itemBuilder: (context, index) => buildBoardingItem(),
-                itemCount: 3,
+                physics: BouncingScrollPhysics(),
+                controller: boardController,
+                onPageChanged: (int index) {
+                  if (index == boarding.length - 1) {
+                    setState(() {
+                      isLast = true;
+                    });
+                  } else {
+                    setState(() {
+                      isLast = false;
+                    });
+                  }
+                },
+                itemBuilder: (context, index) =>
+                    buildBoardingItem(boarding[index]),
+                itemCount: boarding.length,
               ),
             ),
             SizedBox(
@@ -33,12 +96,34 @@ class OnBoardingScreen extends StatelessWidget {
             Row(
               // ignore: prefer_const_literals_to_create_immutables
               children: [
-                Text(
-                  'Indicator',
+                SmoothPageIndicator(
+                  controller: boardController,
+                  effect: ExpandingDotsEffect(
+                      dotColor: Colors.grey,
+                      activeDotColor: defaultColor,
+                      dotHeight: 10,
+                      expansionFactor: 4,
+                      spacing: 5,
+                      dotWidth: 10),
+                  count: boarding.length,
                 ),
                 Spacer(),
                 FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (isLast) {
+                      navidateAndFInish(
+                        context,
+                        LOginScreen(),
+                      );
+                    } else {
+                      boardController.nextPage(
+                        duration: Duration(
+                          milliseconds: 750,
+                        ),
+                        curve: Curves.fastLinearToSlowEaseIn,
+                      );
+                    }
+                  },
                   child: Icon(
                     Icons.arrow_forward_ios,
                   ),
@@ -51,20 +136,20 @@ class OnBoardingScreen extends StatelessWidget {
     );
   }
 
-  Widget buildBoardingItem() => Column(
+  Widget buildBoardingItem(BoardingModel model) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         // ignore: prefer_const_literals_to_create_immutables
         children: [
           Expanded(
             child: Image(
-              image: AssetImage('assets/images/onboard_1.png'),
+              image: AssetImage('${model.image}'),
             ),
           ),
           SizedBox(
             height: 30.0,
           ),
           Text(
-            'Screen  Title',
+            '${model.title}',
             style: TextStyle(
               fontSize: 24.0,
             ),
@@ -73,10 +158,13 @@ class OnBoardingScreen extends StatelessWidget {
             height: 15,
           ),
           Text(
-            'Screen  Body',
+            '${model.body}',
             style: TextStyle(
               fontSize: 14.0,
             ),
+          ),
+          SizedBox(
+            height: 15,
           ),
         ],
       );

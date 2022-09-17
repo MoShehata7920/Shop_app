@@ -155,3 +155,13 @@ void navigateTo(context, Widget) => Navigator.push(
         builder: (context) => Widget,
       ),
     );
+
+void navidateAndFInish(context, Widget) => Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Widget,
+      ),
+      (route) {
+        return false;
+      },
+    );
