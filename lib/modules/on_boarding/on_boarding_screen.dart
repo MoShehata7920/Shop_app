@@ -55,9 +55,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       value: true,
     ).then((value) {
       if (value) {
-        navidateAndFInish(
+        navigateAndFInish(
           context,
-          LOginScreen(),
+          LoginScreen(),
         );
       }
     });

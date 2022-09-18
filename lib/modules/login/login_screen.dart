@@ -4,50 +4,51 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shop_app/layout/shop_screen_layout.dart';
 import 'package:shop_app/modules/login/cubit/cubit.dart';
 import 'package:shop_app/modules/login/cubit/states.dart';
 import 'package:shop_app/modules/register/register_screen.dart';
 import 'package:shop_app/shared/component/component.dart';
+import 'package:shop_app/shared/network/local/cache_helper.dart';
 
-class LOginScreen extends StatelessWidget {
-  LOginScreen({Key? key}) : super(key: key);
+// ignore: must_be_immutable
+class LoginScreen extends StatelessWidget {
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
 
   var formKey = GlobalKey<FormState>();
 
+  LoginScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    var emailController = TextEditingController();
-    var passwordController = TextEditingController();
     return BlocProvider(
-      create: (BuildContext context) => ShopLoginCubit(),
-      child: BlocConsumer<ShopLoginCubit, ShopLoginState>(
+      create: (BuildContext context) => ShopLoginCuibt(),
+      child: BlocConsumer<ShopLoginCuibt, ShopLoginState>(
         listener: (context, state) {
           if (state is ShopLoginSuccessState) {
             if (state.loginModel.status!) {
+              showToast(
+                  text: state.loginModel.message.toString(),
+                  state: ToastStates.SUCCESS);
               // ignore: avoid_print
               print(state.loginModel.message);
               // ignore: avoid_print
               print(state.loginModel.data!.token);
-              Fluttertoast.showToast(
-                  msg: state.loginModel.message!,
-                  toastLength: Toast.LENGTH_LONG,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 5,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
+
+              CacheHelper.saveData(
+                      key: 'token', value: state.loginModel.data!.token!)
+                  .then(
+                (value) {
+                  // ignore: prefer_const_constructors
+                  navigateAndFInish(context, ShopLayout());
+                },
+              );
             } else {
               // ignore: avoid_print
-              print(state.loginModel.message);
-
-              Fluttertoast.showToast(
-                  msg: state.loginModel.message!,
-                  toastLength: Toast.LENGTH_LONG,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 5,
-                  backgroundColor: Colors.red,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
+              print(state.loginModel.message!);
+              showToast(
+                  text: state.loginModel.message!, state: ToastStates.ERROR);
             }
           }
         },
@@ -104,10 +105,10 @@ class LOginScreen extends StatelessWidget {
                               return 'Password is too short';
                             }
                           },
-                          suffix: ShopLoginCubit.get(context).suffix,
-                          isPassword: ShopLoginCubit.get(context).isPassword,
+                          suffix: ShopLoginCuibt.get(context).suffix,
+                          isPassword: ShopLoginCuibt.get(context).isPassword,
                           suffixPressed: () {
-                            ShopLoginCubit.get(context)
+                            ShopLoginCuibt.get(context)
                                 .changePasswordVisibility();
                           },
                           label: 'Password',
@@ -122,7 +123,7 @@ class LOginScreen extends StatelessWidget {
                               background: Colors.blue,
                               function: () {
                                 if (formKey.currentState!.validate()) {
-                                  ShopLoginCubit.get(context).userLogin(
+                                  ShopLoginCuibt.get(context).userLogin(
                                     email: emailController.text,
                                     password: passwordController.text,
                                   );
