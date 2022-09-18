@@ -29,8 +29,8 @@ class LOginScreen extends StatelessWidget {
               // ignore: avoid_print
               print(state.loginModel.data!.token);
               Fluttertoast.showToast(
-                  msg: "This is Center Short Toast",
-                  toastLength: Toast.LENGTH_SHORT,
+                  msg: state.loginModel.message!,
+                  toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 5,
                   backgroundColor: Colors.green,
@@ -41,8 +41,8 @@ class LOginScreen extends StatelessWidget {
               print(state.loginModel.message);
 
               Fluttertoast.showToast(
-                  msg: "This is Center Short Toast",
-                  toastLength: Toast.LENGTH_SHORT,
+                  msg: state.loginModel.message!,
+                  toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 5,
                   backgroundColor: Colors.red,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shop_app/modules/login/login_screen.dart';
 import 'package:shop_app/modules/on_boarding/on_boarding_screen.dart';
 import 'package:shop_app/shared/bloc_observer.dart';
 import 'package:shop_app/shared/cubit/cubit.dart';
@@ -20,17 +21,24 @@ void main() async {
   DioHelper.init();
   await CacheHelper.init();
 
-  bool? isDark = CacheHelper.getBoolean(key: 'isDark');
+  bool? isDark = CacheHelper.getData(key: 'isDark');
+  // ignore: unused_local_variable
+  bool? onBoarding = CacheHelper.getData(key: 'onBoarding');
 
-  runApp(MyApp(isDark));
+  runApp(MyApp(
+    isDark: isDark,
+    onBoarding: onBoarding,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   // const MyApp({Key? key, this.isDark}) : super(key: key);
 
   final bool? isDark;
+  final bool? onBoarding;
 
-  MyApp(this.isDark);
+  // ignore: prefer_const_constructors_in_immutables, use_key_in_widget_constructors
+  MyApp({this.isDark, this.onBoarding});
 
   // This widget is the root of your application.
   @override
@@ -52,45 +60,10 @@ class MyApp extends StatelessWidget {
             darkTheme: darkTheme,
             themeMode: ThemeMode.light,
             // AppCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
-            home: OnBoardingScreen(),
+            home: true ? LOginScreen() : OnBoardingScreen(),
           );
         },
       ),
     );
   }
 }
-
-
-
-// MultiBlocProvider(
-//     providers: [
-//       BlocProvider(create: (context) => BonianCubit()..getProducts()),
-//       BlocProvider(
-//         create: (BuildContext context) => AppCubit()
-//           ..changeAppMode(
-//             fromShared: isDark,
-//           ),
-//       )
-//       // BlocProvider(create: (context) =>  )
-//     ],
-//     child: BlocConsumer<AppCubit, AppStates>(
-//       listener: (context, state) {},
-//       builder: (context, state) {
-//         return MaterialApp(
-//           debugShowCheckedModeBanner: false,
-//           theme: ThemeData(
-//             primarySwatch: Colors.amber,
-//             scaffoldBackgroundColor: Colors.white,
-//             
-//             floatingActionButtonTheme: FloatingActionButtonThemeData(
-//               backgroundColor: Colors.amber,
-//             ),
-//             
-
-//           ),
-//           
-//           
-//           home: BonianLayout(),
-//         );
-//       },
-//     ));
