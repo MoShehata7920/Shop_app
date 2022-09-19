@@ -16,6 +16,8 @@ import 'package:shop_app/shared/network/local/cache_helper.dart';
 import 'package:shop_app/shared/network/remote/dio_helper.dart';
 import 'package:shop_app/shared/styles/themes.dart';
 
+import 'shared/component/constant.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -29,13 +31,14 @@ void main() async {
 
   // ignore: unused_local_variable
   bool? onBoarding = CacheHelper.getData(key: 'onBoarding');
-  String? token = CacheHelper.getData(key: 'token');
+  // String? token = CacheHelper.getData(key: 'token');
 
   if (onBoarding != null) {
-    if (token != null)
+    if (token != null) {
       widget = ShopLayout();
-    else
+    } else {
       widget = LoginScreen();
+    }
   } else {
     widget = OnBoardingScreen();
   }

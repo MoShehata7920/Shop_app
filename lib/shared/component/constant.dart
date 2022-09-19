@@ -25,3 +25,5 @@ void printFullText(String text) {
   // ignore: avoid_print
   Pattern.allMatches(text).forEach((match) => print(match.group(0)));
 }
+
+String? token = CacheHelper.getData(key: 'token');
