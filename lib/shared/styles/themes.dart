@@ -27,7 +27,7 @@ ThemeData darkTheme = ThemeData(
       FloatingActionButtonThemeData(backgroundColor: Colors.amber),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
       type: BottomNavigationBarType.fixed,
-      selectedItemColor: Colors.amber,
+      selectedItemColor: defaultColor,
       unselectedItemColor: Colors.white,
       elevation: 25,
       backgroundColor: Colors.black),
@@ -59,7 +59,7 @@ ThemeData lightTheme = ThemeData(
       FloatingActionButtonThemeData(backgroundColor: Colors.amber),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
-    selectedItemColor: Colors.amber,
+    selectedItemColor: defaultColor,
     unselectedItemColor: Colors.grey,
     elevation: 25,
     backgroundColor: Colors.white,
