@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/layout/cubit/states.dart';
+import 'package:shop_app/models/categories_model.dart';
 import 'package:shop_app/models/home_model.dart';
 import 'package:shop_app/modules/categories/categories_screen.dart';
 import 'package:shop_app/modules/favorities/favorities_screen.dart';
@@ -49,6 +50,26 @@ class ShopCubit extends Cubit<ShopStates> {
       // ignore: avoid_print
       print(error.toString());
       emit(ShopErrorHomeDataState());
+    });
+  }
+
+  CategoriesModel? categoriesModel;
+
+  void getCategories() {
+    DioHelper.getData(
+      url: GET_CATEGORIES,
+      token: token, //not important bc he didn't ask it in postman
+    ).then((value) {
+      categoriesModel = CategoriesModel.fromJson(value.data);
+
+      printFullText(homeModel!.data!.banners[0].image!);
+      // ignore: avoid_print
+      print(homeModel!.status);
+      emit(ShopSuccessCategoriesState());
+    }).catchError((error) {
+      // ignore: avoid_print
+      print(error.toString());
+      emit(ShopErrorCategoriesState());
     });
   }
 }
