@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/layout/cubit/states.dart';
 import 'package:shop_app/models/categories_model.dart';
+import 'package:shop_app/models/change_favoritees_model.dart';
 import 'package:shop_app/models/home_model.dart';
 import 'package:shop_app/modules/categories/categories_screen.dart';
 import 'package:shop_app/modules/favorities/favorities_screen.dart';
@@ -33,6 +34,8 @@ class ShopCubit extends Cubit<ShopStates> {
 
   HomeModel? homeModel;
 
+  Map<int, bool> favorites = {};
+
   void getHomeData() {
     emit(ShopLoadingHomeDataState());
 
@@ -42,9 +45,21 @@ class ShopCubit extends Cubit<ShopStates> {
     ).then((value) {
       homeModel = HomeModel.fromJson(value.data);
 
-      printFullText(homeModel!.data!.banners[0].image!);
-      // ignore: avoid_print
-      print(homeModel!.status);
+      // printFullText(homeModel!.data!.banners[0].image!);
+      // // ignore: avoid_print
+      // print(homeModel!.status);
+
+      // ignore: avoid_function_literals_in_foreach_calls
+      homeModel!.data!.products.forEach(
+        (element) {
+          favorites.addAll({
+            element.id!: element.inFavorites!,
+          });
+        },
+      );
+
+      print(favorites.toString());
+
       emit(ShopSuccessHomeDataState());
     }).catchError((error) {
       // ignore: avoid_print
@@ -70,6 +85,32 @@ class ShopCubit extends Cubit<ShopStates> {
       // ignore: avoid_print
       print(error.toString());
       emit(ShopErrorCategoriesState());
+    });
+  }
+
+  ChangeFavoritesModel? changeFavoritesModel;
+
+  void changeFavorites(int productId) {
+    favorites[productId] = !favorites[productId]!; //this used to change
+    emit(ShopChangeFavoritesState());
+
+    DioHelper.postData(
+      url: FAVORITES,
+      data: {
+        'product_id': productId,
+      },
+      token: token,
+    ).then((value) {
+      changeFavoritesModel = ChangeFavoritesModel.fromJson(value.data);
+      // ignore: avoid_print
+      print(value.data);
+      if (!changeFavoritesModel!.status!) {
+        favorites[productId] = !favorites[productId]!;
+      } //to make sure that there is no error with the status
+      emit(ShopSuccessChangeFavoritesState(changeFavoritesModel!));
+    }).catchError((error) {
+      favorites[productId] = !favorites[productId]!;
+      emit(ShopErrorChangeFavoritesState());
     });
   }
 }

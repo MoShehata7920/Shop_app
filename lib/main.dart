@@ -31,7 +31,9 @@ void main() async {
 
   // ignore: unused_local_variable
   bool? onBoarding = CacheHelper.getData(key: 'onBoarding');
-  // String? token = CacheHelper.getData(key: 'token');
+  String? token = CacheHelper.getData(key: 'token');
+  // ignore: avoid_print
+  print(token);
 
   if (onBoarding != null) {
     if (token != null) {
