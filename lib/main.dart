@@ -1,10 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:shop_app/layout/cubit/cubit.dart';
 import 'package:shop_app/layout/shop_screen_layout.dart';
 import 'package:shop_app/modules/login/login_screen.dart';
@@ -15,8 +12,6 @@ import 'package:shop_app/shared/cubit/states.dart';
 import 'package:shop_app/shared/network/local/cache_helper.dart';
 import 'package:shop_app/shared/network/remote/dio_helper.dart';
 import 'package:shop_app/shared/styles/themes.dart';
-
-import 'shared/component/constant.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,7 +69,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(
             create: (BuildContext context) => ShopCubit()
               ..getHomeData()
-              ..getCategories())
+              ..getCategories()
+              ..getFavorites())
       ],
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},

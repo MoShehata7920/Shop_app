@@ -1,9 +1,12 @@
+// ignore_for_file: unnecessary_import
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/layout/cubit/states.dart';
 import 'package:shop_app/models/categories_model.dart';
 import 'package:shop_app/models/change_favoritees_model.dart';
+import 'package:shop_app/models/favoritess_model.dart';
 import 'package:shop_app/models/home_model.dart';
 import 'package:shop_app/modules/categories/categories_screen.dart';
 import 'package:shop_app/modules/favorities/favorities_screen.dart';
@@ -106,11 +109,34 @@ class ShopCubit extends Cubit<ShopStates> {
       print(value.data);
       if (!changeFavoritesModel!.status!) {
         favorites[productId] = !favorites[productId]!;
+      } else {
+        getFavorites();
       } //to make sure that there is no error with the status
       emit(ShopSuccessChangeFavoritesState(changeFavoritesModel!));
     }).catchError((error) {
       favorites[productId] = !favorites[productId]!;
       emit(ShopErrorChangeFavoritesState());
+    });
+  }
+
+  FavoritesModel? favoritesModel;
+  void getFavorites() {
+    emit(ShopLoadingGetFavoritesState());
+
+    DioHelper.getData(
+      url: FAVORITES,
+      token: token, //not important bc he didn't ask it in postman
+    ).then((value) {
+      favoritesModel = FavoritesModel.fromJson(value.data);
+
+      printFullText(value.data.toString());
+      // ignore: avoid_print
+      print(homeModel!.status);
+      emit(ShopSuccessGetFavoritesState());
+    }).catchError((error) {
+      // ignore: avoid_print
+      print(error.toString());
+      emit(ShopErrorGetFavoritesState());
     });
   }
 }
