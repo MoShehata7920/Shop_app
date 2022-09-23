@@ -61,6 +61,7 @@ class ShopCubit extends Cubit<ShopStates> {
         },
       );
 
+      // ignore: avoid_print
       print(favorites.toString());
 
       emit(ShopSuccessHomeDataState());
