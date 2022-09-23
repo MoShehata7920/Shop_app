@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/layout/cubit/cubit.dart';
 import 'package:shop_app/layout/cubit/states.dart';
 import 'package:shop_app/shared/component/component.dart';
+import 'package:shop_app/shared/component/constant.dart';
+import 'package:shop_app/shared/styles/colors.dart';
 
 class SettingsScreen extends StatelessWidget {
   SettingsScreen({Key? key}) : super(key: key);
@@ -71,6 +73,15 @@ class SettingsScreen extends StatelessWidget {
                     },
                     label: 'Phone',
                     prefix: Icons.phone),
+                const SizedBox(
+                  height: 15,
+                ),
+                defaultButton(
+                    background: defaultColor,
+                    function: () {
+                      signOut(context);
+                    },
+                    text: 'logout')
               ],
             ),
           ),

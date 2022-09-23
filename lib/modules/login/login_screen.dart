@@ -9,6 +9,7 @@ import 'package:shop_app/modules/login/cubit/cubit.dart';
 import 'package:shop_app/modules/login/cubit/states.dart';
 import 'package:shop_app/modules/register/register_screen.dart';
 import 'package:shop_app/shared/component/component.dart';
+import 'package:shop_app/shared/component/constant.dart';
 import 'package:shop_app/shared/network/local/cache_helper.dart';
 
 // ignore: must_be_immutable
@@ -40,6 +41,7 @@ class LoginScreen extends StatelessWidget {
                       key: 'token', value: state.loginModel.data!.token!)
                   .then(
                 (value) {
+                  token = state.loginModel.data!.token!;
                   // ignore: prefer_const_constructors
                   navigateAndFInish(context, ShopLayout());
                 },
