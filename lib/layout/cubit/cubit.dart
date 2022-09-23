@@ -8,6 +8,7 @@ import 'package:shop_app/models/categories_model.dart';
 import 'package:shop_app/models/change_favoritees_model.dart';
 import 'package:shop_app/models/favoritess_model.dart';
 import 'package:shop_app/models/home_model.dart';
+import 'package:shop_app/models/login_model.dart';
 import 'package:shop_app/modules/categories/categories_screen.dart';
 import 'package:shop_app/modules/favorities/favorities_screen.dart';
 import 'package:shop_app/modules/products/products_screen.dart';
@@ -24,10 +25,13 @@ class ShopCubit extends Cubit<ShopStates> {
   int currentIndex = 0;
 
   List<Widget> bottomScreens = [
-    const ProductsScreen(),
-    const CategoriesScreen(),
-    const FavoritesScreen(),
-    const SettingsScreen(),
+    // ignore: prefer_const_constructors
+    ProductsScreen(),
+    // ignore: prefer_const_constructors
+    CategoriesScreen(),
+    // ignore: prefer_const_constructors
+    FavoritesScreen(),
+    SettingsScreen(),
   ];
 
   void changeBottom(int index) {
@@ -138,6 +142,27 @@ class ShopCubit extends Cubit<ShopStates> {
       // ignore: avoid_print
       print(error.toString());
       emit(ShopErrorGetFavoritesState());
+    });
+  }
+
+  ShopLoginModel? userModel;
+  void getUserData() {
+    emit(ShopLoadingUserDataState());
+
+    DioHelper.getData(
+      url: PROFILE,
+      token: token, //not important bc he didn't ask it in postman
+    ).then((value) {
+      userModel = ShopLoginModel.fromJson(value.data);
+
+      printFullText(userModel!.data!.name!);
+      // ignore: avoid_print
+      print(homeModel!.status);
+      emit(ShopSuccessUserDataState(userModel));
+    }).catchError((error) {
+      // ignore: avoid_print
+      print(error.toString());
+      emit(ShopErrorUserDataState());
     });
   }
 }
