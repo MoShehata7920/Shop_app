@@ -24,7 +24,7 @@ class ShopLayout extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text(
-              'salla',
+              'MO\'s ShopApp ',
             ),
             actions: [
               IconButton(
