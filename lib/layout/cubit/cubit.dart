@@ -165,4 +165,30 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(ShopErrorUserDataState());
     });
   }
+
+  void getUpdateUserData({
+    required String name,
+    required String email,
+    required String phone,
+  }) {
+    emit(ShopLoadingUpdateUserDataState());
+
+    DioHelper.putData(url: UPDATE_PROFILE, token: token, data: {
+      'name': name,
+      'phone': phone,
+      'email': email,
+    } //not important bc he didn't ask it in postman
+        ).then((value) {
+      userModel = ShopLoginModel.fromJson(value.data);
+
+      printFullText(userModel!.data!.name!);
+      // ignore: avoid_print
+      print(homeModel!.status);
+      emit(ShopSuccessUpdateUserDataState(userModel));
+    }).catchError((error) {
+      // ignore: avoid_print
+      print(error.toString());
+      emit(ShopErrorUpdateUserDataState());
+    });
+  }
 }
